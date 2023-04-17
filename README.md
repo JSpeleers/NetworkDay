@@ -2,6 +2,7 @@
 
 ## Install
 
+0. Open terminal in this directory
 1. Create a Python virtual environment: `$ python -m venv venv`
 2. Activate the virtual environment 
    - Windows: `$ venv\Scripts\activate.bat`
