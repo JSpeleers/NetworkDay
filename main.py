@@ -23,6 +23,9 @@ class Participant:
     def __str__(self):
         return f'{self.name} ({self.id})'
 
+    def __repr__(self):
+        return f'{self.name} ({self.id})'
+
 
 def main(args):
     print(f'args = {args}')
@@ -50,24 +53,24 @@ def main(args):
 
     print('Starting generations...')
     gen_count = 0
-    solution = generate_solution(participants, topic_preferences, number_of_topics, number_of_rounds,
-                                 number_of_preferences)
-    score, min_score = verify_solution(participants, solution, topic_preferences, number_of_preferences)
-    best_score = score
-    best_min_score = min_score
-    print(f'Generation {gen_count} {(score, min_score)}')
+    best_score = 0
+    best_min_score = 0
+    best_solution = None
     while gen_count < number_of_generations:
         start = time.time()
         solution = generate_solution(participants, topic_preferences, number_of_topics, number_of_rounds,
                                      number_of_preferences)
         score, min_score = verify_solution(participants, solution, topic_preferences, number_of_preferences)
-        # TODO zet if best_min_score and best_score etc
+        if (min_score > best_min_score) or (min_score == best_min_score and score > best_score):
+            best_min_score = min_score
+            best_score = score
+            best_solution = solution
+        print(f'Generation {gen_count} {(score, min_score)} in {time.time() - start}s\t'
+              f'current best {(best_score, best_min_score)}')
         gen_count += 1
-        print(f'Generation {gen_count} {(score, min_score)} in {time.time() - start}s')
-    print(f'Solution found after {gen_count + 1} generation{"s" if gen_count > 0 else ""}:')
-    outputter.pretty_print(solution)
-    # outputter.pretty_print_per_participant(participants, solution)
-    # outputter.solution_to_emails(participants, solution)
+    # outputter.pretty_print(best_solution)
+    outputter.pretty_print_per_participant(participants, best_solution)
+    # outputter.solution_to_emails(participants, best_solution)
 
 
 def generate_solution(participants, topic_preferences, number_of_topics, number_of_rounds, number_of_preferences):
@@ -150,7 +153,7 @@ if __name__ == '__main__':
     argParser.add_argument('-p', '--preferences', type=int, help='minimal number of preferred topics per participant',
                            required=True)
     argParser.add_argument('-t', '--topics', type=int, help='number of topics', required=True)
-    argParser.add_argument('-g', '--generations', type=int, default=1000, help='number of topics', required=True)
+    argParser.add_argument('-g', '--generations', type=int, default=1000, help='number generations', required=False)
     args = argParser.parse_args()
 
     if args.preferences > args.rounds:
