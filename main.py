@@ -68,9 +68,9 @@ def main(args):
         print(f'Generation {gen_count} {(score, min_score)} in {time.time() - start}s\t'
               f'current best {(best_score, best_min_score)}')
         gen_count += 1
-    # outputter.pretty_print(best_solution)
     outputter.pretty_print_per_participant(participants, best_solution)
-    # outputter.solution_to_emails(participants, best_solution)
+    if args.emails:
+        outputter.solution_to_emails(participants, best_solution)
 
 
 def generate_solution(participants, topic_preferences, number_of_topics, number_of_rounds, number_of_preferences):
@@ -154,6 +154,7 @@ if __name__ == '__main__':
                            required=True)
     argParser.add_argument('-t', '--topics', type=int, help='number of topics', required=True)
     argParser.add_argument('-g', '--generations', type=int, default=1000, help='number generations', required=False)
+    argParser.add_argument('-e', '--emails', action='store_true', help='output result into emails', required=False)
     args = argParser.parse_args()
 
     if args.preferences > args.rounds:

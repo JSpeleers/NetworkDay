@@ -6,6 +6,10 @@ from independentsoft.msg import Recipient
 from independentsoft.msg import RecipientType
 from independentsoft.msg import StoreSupportMask
 
+_TOPIC_NAMES = ['Human resources', 'Rewards and incentives', 'Legal aspects', 'Infrastructure', 'Reuse of data',
+                'Quality of research', 'Open Access for publications', 'Societal role', 'Digital innovation',
+                'Change of mindset']
+
 
 def pretty_print(assignments):
     for i, r in enumerate(assignments):
@@ -16,7 +20,7 @@ def pretty_print(assignments):
 
 def pretty_print_per_participant(participants, assignments, csv=True):
     for participant in participants:
-        topics = [t for i, r in enumerate(assignments) for t, topic in enumerate(r) if participant in topic]
+        topics = _get_topics_in_order(participant, assignments)
         if csv:
             print(f'{participant},{",".join(map(str, topics))}')
         else:
@@ -25,30 +29,37 @@ def pretty_print_per_participant(participants, assignments, csv=True):
 
 def solution_to_emails(participants, assignments):
     for participant in participants:
-        topics = [t for i, r in enumerate(assignments) for t, topic in enumerate(r) if participant in topic]
-        _create_msg(participant, topics)
+        print(f'Creating email for {participant}')
+        _create_msg(participant, _get_topics_in_order(participant, assignments))
 
 
-def _create_msg(participant, topics, subject='Email title'):
+def _get_topics_in_order(participant, assignments):
+    return [t for _, r in enumerate(assignments) for t, topic in enumerate(r) if participant in topic]
+
+
+def _create_msg(participant, topics, subject='Topics Brainstormsessions Open Science NetworkDay'):
     message = Message()
 
     recipient = Recipient()
     recipient.address_type = "SMTP"
     recipient.display_type = DisplayType.MAIL_USER
     recipient.object_type = ObjectType.MAIL_USER
-    recipient.display_name = participant.name
+    recipient.display_name = participant.email
     recipient.email_address = participant.email
     recipient.recipient_type = RecipientType.TO
 
     message.subject = subject
-    message.body = f'''Beste {participant.name},
-    
-    U volgt de volgende onderwerpen: {",".join(map(str, topics))}
-    
-    Veel plezier!
+    message.body = f'''Dear {participant.name},
+
+For brainstorm round 1 'Dream', you have been assigned to topic '{_TOPIC_NAMES[topics[0]]}'. For the second round 'Design' you have been assigned to topic '{_TOPIC_NAMES[topics[1]]}'. For the last round 'Deliver' you have been assigned to topic '{_TOPIC_NAMES[topics[2]]}'.
+You can find your topic table on the map you received.
+
+Best regards,
+The FRDN team
     '''
-    message.display_to = "John Smith"
-    message.display_cc = "Mary Smith"
+
+    message.display_to = participant.email
+    # message.display_cc = "Mary Smith"
     message.recipients.append(recipient)
     message.message_flags.append(MessageFlag.UNSENT)
     message.store_support_masks.append(StoreSupportMask.CREATE)

@@ -13,7 +13,13 @@
 
 ## Run
 
+Without email output
+
 `python main.py -f ./examples/Formulierreacties_120p_10t_5p.csv -r 3 -p 2 -t 10`
+
+With email output
+
+`python main.py -f ./examples/Formulierreacties_120p_10t_5p.csv -r 3 -p 2 -t 10 --emails`
 
 ### Params
 
