@@ -6,11 +6,6 @@ from independentsoft.msg import Recipient
 from independentsoft.msg import RecipientType
 from independentsoft.msg import StoreSupportMask
 
-_TOPIC_NAMES = ['Human resources', 'Rewards and incentives', 'Legal aspects', 'Infrastructure', 'Reuse of data',
-                'Quality of research', 'Open Access for publications', 'Societal role', 'Digital innovation',
-                'Change of mindset']
-
-
 def pretty_print(assignments):
     for i, r in enumerate(assignments):
         print(f'Round {i + 1}')
@@ -27,10 +22,10 @@ def pretty_print_per_participant(participants, assignments, topic_indexes, csv=T
             print(f'{participant}: {topics}')
 
 
-def solution_to_emails(participants, assignments):
+def solution_to_emails(participants, assignments, topic_indexes):
     for participant in participants:
         print(f'Creating email for {participant}')
-        _create_msg(participant, _get_topics_in_order(participant, assignments))
+        _create_msg(participant, [topic_indexes[i] for i in _get_topics_in_order(participant, assignments)])
 
 
 def _get_topics_in_order(participant, assignments):
@@ -56,9 +51,9 @@ def _create_msg(participant, topics, subject='Topics Brainstormsessions Open Sci
     <p>
     We would like to inform you that you have been assigned the following topics for each of the brainstorming rounds in the FRDN event:
     <ul>
-        <li>For the first round, 'Dream', your assigned topic is '<b>{_TOPIC_NAMES[topics[0]]}</b>'.</li>
-        <li>For the second round, 'Design', your assigned topic is '<b>{_TOPIC_NAMES[topics[1]]}</b>'.</li>
-        <li>For the last round, 'Deliver', your assigned topic is '<b>{_TOPIC_NAMES[topics[2]]}</b>'.</li>
+        <li>For the first round, 'Dream', your assigned topic is '<b>{topics[0]}</b>'.</li>
+        <li>For the second round, 'Design', your assigned topic is '<b>{topics[1]}</b>'.</li>
+        <li>For the last round, 'Deliver', your assigned topic is '<b>{topics[2]}</b>'.</li>
     </ul>
     To find the location of your assigned topics table, please refer to the venue map that you have received.    </p>
     

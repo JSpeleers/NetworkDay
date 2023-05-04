@@ -46,7 +46,7 @@ def main(args):
     topic_preferences = [set() for _ in range(number_of_topics)]  # topic per line containing preferred participants
     for i, row in df.iterrows():
         for preference in row['preferences'].split(','):
-            preference = preference.strip().lower()
+            preference = preference.strip()
             participant = Participant(i, row['name'], row['email'])
             participants.add(participant)
             if preference not in topic_indexes:
@@ -76,7 +76,7 @@ def main(args):
         gen_count += 1
     outputter.pretty_print_per_participant(participants, best_solution, topic_indexes)
     if args.emails:
-        outputter.solution_to_emails(participants, best_solution)
+        outputter.solution_to_emails(participants, best_solution, topic_indexes)
 
 
 def generate_solution(participants, topic_preferences, number_of_topics, number_of_rounds, number_of_preferences):
