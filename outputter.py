@@ -49,14 +49,26 @@ def _create_msg(participant, topics, subject='Topics Brainstormsessions Open Sci
     recipient.recipient_type = RecipientType.TO
 
     message.subject = subject
-    message.body = f'''Dear {participant.name},
 
-For brainstorm round 1 'Dream', you have been assigned to topic '{_TOPIC_NAMES[topics[0]]}'. For the second round 'Design' you have been assigned to topic '{_TOPIC_NAMES[topics[1]]}'. For the last round 'Deliver' you have been assigned to topic '{_TOPIC_NAMES[topics[2]]}'.
-You can find your topic table on the map you received.
+    html_body = f'''
+    <html><body><p>Dear {participant.name},</p>
+    
+    <p>
+    We would like to inform you that you have been assigned the following topics for each of the brainstorming rounds in the FRDN event:
+    <ul>
+        <li>For the first round, 'Dream', your assigned topic is '<b>{_TOPIC_NAMES[topics[0]]}</b>'.</li>
+        <li>For the second round, 'Design', your assigned topic is '<b>{_TOPIC_NAMES[topics[1]]}</b>'.</li>
+        <li>For the last round, 'Deliver', your assigned topic is '<b>{_TOPIC_NAMES[topics[2]]}</b>'.</li>
+    </ul>
+    To find the location of your assigned topics table, please refer to the venue map that you have received.    </p>
+    
+    <p>Thank you, and best regards,<br>
+    The FRDN team</p></body></html>'''
+    html_body_with_rtf = "{\\rtf1\\ansi\\ansicpg1252\\fromhtml1 \\htmlrtf0 " + html_body + "}"
+    rtf_body = html_body_with_rtf.encode("utf_8")
 
-Best regards,
-The FRDN team
-    '''
+    message.body_html_text = html_body
+    message.body_rtf = rtf_body
 
     message.display_to = participant.email
     # message.display_cc = "Mary Smith"
