@@ -31,8 +31,8 @@ def main(args):
     print(f'args = {args}')
 
     df = pd.read_csv(args.file, sep=',')
-    df.rename(columns={'Tijdstempel': 'timestamp', 'Geef je naam op': 'name', 'Geef je email adres op': 'email',
-                       'Welk thema vind jij het interessantst?': 'preferences'}, inplace=True)
+    df.rename(columns={'Tijdstempel': 'timestamp', 'Name and surname': 'name', 'E-mailadres': 'email',
+                       'Which topics do you want to work on? (select 5)': 'preferences'}, inplace=True)
 
     number_of_rounds = args.rounds
     number_of_topics = args.topics
