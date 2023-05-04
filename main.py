@@ -51,7 +51,6 @@ def main(args):
             participants.add(participant)
             if preference not in topic_indexes:
                 topic_indexes.append(preference)
-            print(preference, topic_indexes.index(preference))
             topic_preferences[topic_indexes.index(preference)].add(participant)
 
     for i, preferences in enumerate(topic_preferences):
