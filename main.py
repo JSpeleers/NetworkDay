@@ -39,14 +39,20 @@ def main(args):
     number_of_preferences = args.preferences
     number_of_generations = args.generations
 
+    topic_indexes = []
+
     # Fill list of participants and preferences per topic
     participants = set()
     topic_preferences = [set() for _ in range(number_of_topics)]  # topic per line containing preferred participants
     for i, row in df.iterrows():
         for preference in row['preferences'].split(','):
+            preference = preference.strip().lower()
             participant = Participant(i, row['name'], row['email'])
             participants.add(participant)
-            topic_preferences[int(preference) - 1].add(participant)
+            if preference not in topic_indexes:
+                topic_indexes.append(preference)
+            print(preference, topic_indexes.index(preference))
+            topic_preferences[topic_indexes.index(preference)].add(participant)
 
     for i, preferences in enumerate(topic_preferences):
         print(f'Topic {i + 1} got {len(preferences)} preferences')
@@ -68,7 +74,7 @@ def main(args):
         print(f'Generation {gen_count} {(score, min_score)} in {time.time() - start}s\t'
               f'current best {(best_score, best_min_score)}')
         gen_count += 1
-    outputter.pretty_print_per_participant(participants, best_solution)
+    outputter.pretty_print_per_participant(participants, best_solution, topic_indexes)
     if args.emails:
         outputter.solution_to_emails(participants, best_solution)
 

@@ -18,9 +18,9 @@ def pretty_print(assignments):
             print(f'\tTopic {t + 1}:\t{topic}')
 
 
-def pretty_print_per_participant(participants, assignments, csv=True):
+def pretty_print_per_participant(participants, assignments, topic_indexes, csv=True):
     for participant in participants:
-        topics = _get_topics_in_order(participant, assignments)
+        topics = [topic_indexes[i] for i in _get_topics_in_order(participant, assignments)]
         if csv:
             print(f'{participant},{",".join(map(str, topics))}')
         else:
